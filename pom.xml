@@ -4,11 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.goribun</groupId>
-        <artifactId>naive-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>naive-server</artifactId>
+    <groupId>com.goribun</groupId>
+    <artifactId>naive-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <description>The parent project of naive-rpc</description>
+
+    <modules>
+        <module>naive-core</module>
+        <module>naive-server</module>
+        <module>naive-client</module>
+    </modules>
 </project>

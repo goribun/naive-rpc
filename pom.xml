@@ -14,5 +14,6 @@
         <module>naive-core</module>
         <module>naive-server</module>
         <module>naive-client</module>
+        <module>mvn-plugin</module>
     </modules>
 </project>

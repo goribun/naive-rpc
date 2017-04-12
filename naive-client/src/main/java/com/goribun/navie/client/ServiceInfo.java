@@ -1,10 +1,10 @@
 package com.goribun.navie.client;
 
-import com.goribun.navie.core.annotation.RpcMapping;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.goribun.navie.core.annotation.RpcMapping;
 
 /**
  * @author wangxuesong wangxuesong0302@autohome.com.cn

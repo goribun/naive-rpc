@@ -1,5 +1,7 @@
 package com.goribun.navie.core.exception;
 
+import com.goribun.navie.core.constants.SysErCode;
+
 /**
  * 系统级异常
  *
@@ -10,17 +12,13 @@ public class SysException extends RuntimeException {
 
     private int errorCode;
 
-    public SysException(int errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
+    public SysException(SysErCode sysErCode) {
+        super(sysErCode.getMsg());
+        this.errorCode = sysErCode.getErCode();
     }
 
-    public SysException(int errorCode, String message, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
-    }
-
-    public SysException(String message, Throwable cause) {
-        super(message, cause);
+    public SysException(SysErCode sysErCode, Throwable cause) {
+        super(sysErCode.getMsg(), cause);
+        this.errorCode = sysErCode.getErCode();
     }
 }

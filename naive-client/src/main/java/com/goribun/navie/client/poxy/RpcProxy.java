@@ -1,13 +1,15 @@
 package com.goribun.navie.client.poxy;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.goribun.navie.client.constants.SysErCode;
-import com.goribun.navie.client.exception.ProxyException;
+import com.goribun.navie.core.constants.SysErCode;
+import com.goribun.navie.core.exception.SysException;
+import com.goribun.navie.core.serial.MethodCallEntity;
+import com.goribun.navie.core.serial.MethodCallUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -45,23 +47,31 @@ public class RpcProxy implements InvocationHandler {
      * @throws Throwable
      */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws ProxyException {
+    public Object invoke(Object proxy, Method method, Object[] args) {
         try {
+            Class returnType = method.getReturnType();
             String url = "http://" + ip + ":" + port + "/service/" + clazz.getName() + "/" + method.getName();
-            String argsJson = JSON.toJSONString(args);
+            MethodCallEntity entity = new MethodCallEntity(returnType.getName(), args);
+            String argsJson = MethodCallUtil.getMethodCallStr(entity);
             url += "?args=" + argsJson;
             System.out.println(url);
-            Request requert = new Request.Builder().url(url).build();
-            Response response = client.newCall(requert).execute();
-            Class<?> returnType = method.getReturnType();
+            Request request = new Request.Builder().url(url).build();
+            Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 String result = response.body().string();
-                return JSON.parseObject(result,returnType.getClass());
+                System.out.println(result);
+
+                if("void".equals(returnType.getName()) && "void".equals(result)){
+                    return null;
+                }
+                return JSON.parseObject(result, returnType);
             } else {
-                throw new ProxyException(SysErCode.IO_ERROR.getErCode(), SysErCode.IO_ERROR.getMsg());
+                throw new SysException(SysErCode.OK_HTTP_ERROR);
             }
-        } catch (Throwable t) {
-            throw new ProxyException(SysErCode.IO_ERROR.getErCode(), SysErCode.IO_ERROR.getMsg(), t.getCause());
+        } catch (IOException e) {
+            throw (SysException) new SysException(SysErCode.IO_ERROR).initCause(e);
+        } catch (Throwable e) {
+            throw (SysException) new SysException(SysErCode.RPC_ERROR).initCause(e);
         }
     }
 }

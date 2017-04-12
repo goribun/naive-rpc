@@ -14,8 +14,11 @@
         <module>naive-core</module>
         <module>naive-server</module>
         <module>naive-client</module>
+<<<<<<< HEAD
         <module>mvn-plugin</module>
         <module>naive-test</module>
         <module>facade</module>
+=======
+>>>>>>> parent of a0c95e6... add mvn plugin
     </modules>
 </project>

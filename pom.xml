@@ -15,5 +15,7 @@
         <module>naive-server</module>
         <module>naive-client</module>
         <module>mvn-plugin</module>
+        <module>naive-test</module>
+        <module>facade</module>
     </modules>
 </project>

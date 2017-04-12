@@ -8,4 +8,19 @@ package com.goribun.navie.core.exception;
  */
 public class SysException extends RuntimeException {
 
+    private int errorCode;
+
+    public SysException(int errorCode, String message) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    public SysException(int errorCode, String message, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
+    }
+
+    public SysException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

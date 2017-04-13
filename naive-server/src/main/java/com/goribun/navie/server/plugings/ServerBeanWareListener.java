@@ -21,12 +21,14 @@ public class ServerBeanWareListener implements ApplicationListener<ContextRefres
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object impl = entry.getValue();
             Class[] interfaces = impl.getClass().getInterfaces();
-            if (null == interfaces || interfaces.length > 1) {
+            if (null == interfaces) {
                 throw new SysException(SysErCode.INIT_SERVER_ERR0R);
             }
 
-            String key = interfaces[0].getName();
-            ServerContext.setSpringServers(key, impl);
+            for (int i = 0; i < interfaces.length; i++) {
+                String key = interfaces[i].getName();
+                ServerContext.setSpringServers(key, impl);
+            }
         }
     }
 }

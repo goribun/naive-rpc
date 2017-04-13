@@ -1,12 +1,15 @@
-package com.goribun.navie.client.proxy;
+package com.goribun.navie;
 
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
+import com.goribum.naive.Application;
 import com.goribun.navie.client.poxy.RpcProxy;
 import com.goribun.navie.facade.dto.UserDTO;
 import com.goribun.navie.facade.intefaces.IUserService;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.SpringApplication;
 
 /**
  * @author chenchuan@autohome.com.cn
@@ -14,6 +17,11 @@ import org.junit.Test;
  * @description
  */
 public class RpcProxyTest {
+    @Before
+    public void before() {
+        SpringApplication.run(Application.class);
+    }
+
     @Test
     public void testRpcProxy() {
         IUserService userService = RpcProxy.getProxy("127.0.0.1", 8090, IUserService.class);

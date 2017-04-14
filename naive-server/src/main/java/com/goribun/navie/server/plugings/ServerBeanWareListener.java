@@ -1,12 +1,19 @@
 package com.goribun.navie.server.plugings;
 
 import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.google.common.base.Strings;
+import com.google.common.primitives.Booleans;
 import com.goribun.navie.core.constants.SysErCode;
 import com.goribun.navie.core.exception.SysException;
 import com.goribun.navie.server.annotations.RpcServer;
 import com.goribun.navie.server.rpccontext.ServerContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
@@ -18,7 +25,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 public class ServerBeanWareListener implements ApplicationListener<ContextRefreshedEvent> {
 
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Map<String, Object> map = event.getApplicationContext().getBeansWithAnnotation(RpcServer.class);
+        ApplicationContext cxf = event.getApplicationContext();
+
+        Map<String, Object> map = cxf.getBeansWithAnnotation(RpcServer.class);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object impl = entry.getValue();
 
@@ -32,6 +41,21 @@ public class ServerBeanWareListener implements ApplicationListener<ContextRefres
             }
 
             ServerContext.setSpringServers(key, impl);
+
+            String isRegistServer = cxf.getEnvironment().getProperty("regist.switch");
+            if (isRegistServer.equalsIgnoreCase("true")) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        regitServer();
+                    }
+                }).start();
+            }
+
         }
     }
+
+    public void regitServer() {
+        System.out.println("<<<<<<<<regist server>>>>>>>>>>");
+    }
+
 }

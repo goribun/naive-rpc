@@ -10,7 +10,7 @@ import com.google.common.collect.Maps;
  * @author chenchuan@autohome.com.cn
  * @create 2017-04-12-上午9:21
  * @description
- * @see 'http://highreactor.com/article/rpc01'
+ * @link http://highreactor.com/article/rpc01
  */
 public class MethodCallEntity {
     private String returnType;

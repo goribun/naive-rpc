@@ -11,8 +11,10 @@ import com.google.common.base.Strings;
 import com.google.common.primitives.Booleans;
 import com.goribun.navie.core.constants.SysErCode;
 import com.goribun.navie.core.exception.SysException;
+import com.goribun.navie.manage.regist.IZkClient;
 import com.goribun.navie.server.annotations.RpcServer;
 import com.goribun.navie.server.rpccontext.ServerContext;
+import org.apache.zookeeper.ZooKeeper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -44,18 +46,34 @@ public class ServerBeanWareListener implements ApplicationListener<ContextRefres
 
             String isRegistServer = cxf.getEnvironment().getProperty("regist.switch");
             if (isRegistServer.equalsIgnoreCase("true")) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        regitServer();
-                    }
-                }).start();
+                IZkClient zkClient = cxf.getBean(IZkClient.class);
+                String projectName = cxf.getEnvironment().getProperty("project.name");
+                new RegistServerThread(zkClient, projectName).start();
             }
 
         }
     }
 
-    public void regitServer() {
-        System.out.println("<<<<<<<<regist server>>>>>>>>>>");
+    public void regitServer(IZkClient client, String projectName) {
+        if (null == client || Strings.isNullOrEmpty(projectName)) {
+            throw new SysException(SysErCode.PROVIDE_ERR0R);
+        }
+        //TODO
+    }
+
+    public class RegistServerThread extends Thread {
+        private IZkClient zkClient;
+        private String projectName;
+
+        public RegistServerThread(IZkClient zkClient, String projectName) {
+            this.zkClient = zkClient;
+            this.projectName = projectName;
+        }
+
+        @Override
+        public void run() {
+            regitServer(zkClient, projectName);
+        }
     }
 
 }

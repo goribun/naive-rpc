@@ -23,7 +23,7 @@ public class ZkClient implements IZkClient, Watcher {
     @Override
     public void connection() {
         try {
-            ZooKeeper zookeeper = new ZooKeeper(HOST, TIME_OUT, this);
+            zooKeeper = new ZooKeeper(HOST, TIME_OUT, this);
             countDownLatch.await();
         } catch (Exception e) {
             throw (SysException) new SysException(SysErCode.ZK_ERR0R).initCause(e);

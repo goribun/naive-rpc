@@ -24,7 +24,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
-        <!--@see http://blog.csdn.net/cuiy6642/article/details/52131399-->
+        <!--@link http://blog.csdn.net/cuiy6642/article/details/52131399-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -53,6 +53,11 @@
         <dependency>
             <groupId>com.goribun</groupId>
             <artifactId>naive-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.goribun</groupId>
+            <artifactId>naive-client</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

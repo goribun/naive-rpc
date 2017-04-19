@@ -10,7 +10,8 @@ public enum SysErCode {
     OK_HTTP_ERROR(0002, "okhttp请求错误"),
     RPC_ERROR(0003, "RPC调用失败"),
     INIT_SERVER_ERR0R(0004, "初始化服务端失败"),
-    PROVIDE_ERR0R(0005, "提供rpc服务失败");
+    PROVIDE_ERR0R(0005, "提供rpc服务失败"),
+    ZK_ERR0R(0006, "zookeeper服务失败");
     private int erCode;
     private String msg;
 

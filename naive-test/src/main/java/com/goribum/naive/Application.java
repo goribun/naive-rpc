@@ -17,19 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Application {
 
-    @RequestMapping("/")
-    public String greeting() {
-        return "Hello World!";
-    }
-
-    @RequestMapping("/service/{className}/{methodName}")
-    public Object service(@PathVariable("className") String className, @PathVariable("methodName") String methodName,
-                          String args) {
-        return RpcProvide.rpcProvide(className, methodName, args);
-    }
-
-    public static void main(String[] args) {
-        ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
-        System.out.println(applicationContext.getEnvironment().getProperty("server.port"));
-    }
+//    @RequestMapping("/")
+//    public String greeting() {
+//        return "Hello World!";
+//    }
+//
+//    @RequestMapping("/service/{className}/{methodName}")
+//    public Object service(@PathVariable("className") String className, @PathVariable("methodName") String methodName,
+//                          String args) {
+//
+//        System.out.println("----------" + className);
+//        return RpcProvide.rpcProvide(className, methodName, args);
+//    }
+//
+//    public static void main(String[] args) {
+//        ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
+//        System.out.println(applicationContext.getEnvironment().getProperty("server.port"));
+//    }
 }

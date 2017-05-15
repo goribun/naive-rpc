@@ -9,12 +9,14 @@ import java.lang.annotation.Target;
 /**
  * 服务暴露注解
  *
- * @author wangxuesong wangxuesong0302@autohome.com.cn
- * @version 1.0
+ * @author wangxuesong
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface RpcService {
+
+    //默认接口或类名或方法名
+    String value() default "";
 
 }

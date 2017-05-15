@@ -3,10 +3,12 @@ package com.goribun.navie.core.exception;
 /**
  * 业务级异常
  *
- * @author wangxuesong wangxuesong0302@autohome.com.cn
+ * @author wangxuesong
  * @version 1.0
  */
 public class BizException extends RuntimeException {
+
+    private static final long serialVersionUID = -1908829941897943887L;
 
     private static final String DEFAULT_EXCEPTION_CODE = "-1";
     private static final String DEFAULT_EXCEPTION_MESSAGE = "业务异常";

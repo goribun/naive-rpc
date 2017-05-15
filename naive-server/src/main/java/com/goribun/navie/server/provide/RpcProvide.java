@@ -9,29 +9,27 @@ import com.goribun.navie.core.constants.SysErCode;
 import com.goribun.navie.core.exception.SysException;
 import com.goribun.navie.core.serial.MethodCallEntity;
 import com.goribun.navie.core.serial.MethodCallUtil;
-import com.goribun.navie.server.rpccontext.ServerContext;
 import org.springframework.util.CollectionUtils;
 
 /**
- * @author chenchuan@autohome.com.cn
- * @create 2017-04-12-下午10:15
- * @description
+ * @author chenchuan
  */
 public class RpcProvide {
 
-    public static Object rpcProvide(String className, String methodName, String args) {
+    @SuppressWarnings("unchecked")
+    public static Object rpcProvide(Object obj, String methodName, String args) {
         try {
-            Object impl = ServerContext.getServer(className);
+
             MethodCallEntity methodCall = MethodCallUtil.getMethodCallEntity(args);
-            Class implClass = impl.getClass();
+
             LinkedList<Map<String, Object>> argList = methodCall.getArgList();
             if (CollectionUtils.isEmpty(argList)) {
-                Method method = implClass.getDeclaredMethod(methodName);
+                Method method = obj.getClass().getDeclaredMethod(methodName);
                 if ("void".equals(methodCall.getReturnType())) {
-                    method.invoke(implClass.newInstance());
+                    method.invoke(obj);
                     return "void";
                 } else {
-                    return method.invoke(implClass.newInstance());
+                    return method.invoke(obj);
                 }
             } else {
                 Class[] parameterTypes = new Class[argList.size()];
@@ -44,16 +42,17 @@ public class RpcProvide {
                         refArgs[i] = JSON.parseObject(entry.getValue().toString(), parameterClass);
                     }
                 }
-                Method refMethod = implClass.getDeclaredMethod(methodName, parameterTypes);
+                Method refMethod = obj.getClass().getDeclaredMethod(methodName, parameterTypes);
                 if ("void".equals(methodCall.getReturnType())) {
-                    refMethod.invoke(implClass.newInstance(), refArgs);
+                    refMethod.invoke(obj.getClass().newInstance(), refArgs);
                     return "void";
                 } else {
-                    return refMethod.invoke(implClass.newInstance(), refArgs);
+                    return refMethod.invoke(obj, refArgs);
                 }
             }
         } catch (Exception e) {
             throw (SysException) new SysException(SysErCode.PROVIDE_ERR0R).initCause(e);
         }
     }
+
 }

@@ -9,12 +9,11 @@ import java.lang.annotation.Target;
 /**
  * 映射uri注解
  *
- * @author wangxuesong wangxuesong0302@autohome.com.cn
- * @version 1.0
+ * @author wangxuesong
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface RpcMapping {
     //默认接口或类名或方法名
     String value() default "";

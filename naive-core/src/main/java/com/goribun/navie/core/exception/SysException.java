@@ -5,10 +5,11 @@ import com.goribun.navie.core.constants.SysErCode;
 /**
  * 系统级异常
  *
- * @author wangxuesong wangxuesong0302@autohome.com.cn
- * @version 1.0
+ * @author wangxuesong
  */
 public class SysException extends RuntimeException {
+
+    private static final long serialVersionUID = 2363088507608422727L;
 
     private int errorCode;
 

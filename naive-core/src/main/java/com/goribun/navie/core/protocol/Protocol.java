@@ -1,10 +1,14 @@
 package com.goribun.navie.core.protocol;
 
+import java.io.Serializable;
+
 /**
- * @author wangxuesong wangxuesong0302@autohome.com.cn
- * @version 1.0
+ * @author wangxuesong
  */
-public class Protocol<T> {
+public class Protocol<T> implements Serializable {
+
+    private static final long serialVersionUID = -7464366914176464832L;
+
     //编码
     private String code;
     //消息

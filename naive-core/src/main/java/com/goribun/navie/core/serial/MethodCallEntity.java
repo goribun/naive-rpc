@@ -7,18 +7,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * @author chenchuan@autohome.com.cn
- * @create 2017-04-12-上午9:21
- * @description
- * @link http://highreactor.com/article/rpc01
+ * 调用方法bean
+ *
+ * @author chenchuan
  */
 public class MethodCallEntity {
     private String returnType;
     private LinkedList<Map<String, Object>> argList = Lists.newLinkedList();
-
-    public MethodCallEntity() {
-        //empty constructor
-    }
 
     public MethodCallEntity(String returnType, Object[] args) {
         this.returnType = returnType;

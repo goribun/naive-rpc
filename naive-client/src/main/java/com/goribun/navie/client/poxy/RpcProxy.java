@@ -3,7 +3,6 @@ package com.goribun.navie.client.poxy;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.goribun.navie.core.constants.SysErCode;
@@ -15,42 +14,37 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @author wangxuesong wangxuesong0302@autohome.com.cn
- * @version 1.0
+ * Rpc代理
+ *
+ * @author wangxuesong
  */
 public class RpcProxy implements InvocationHandler {
+
     private OkHttpClient client = new OkHttpClient();
 
-    private Class<?> clazz;
-    private String ip;
-    private int port;
+    //private Class<?> clazz;
+    private String serviceName;
+    private String host;
 
-    public RpcProxy(String ip, int port, Class<?> clazz) {
-        this.ip = ip;
-        this.port = port;
-        this.clazz = clazz;
-    }
-
-    public static <T> T getProxy(String ip, int port, Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(),
-                new Class[]{clazz}, new RpcProxy(ip, port, clazz));
+    public RpcProxy(String host, String serviceName) {
+        this.host = host;
+        this.serviceName = serviceName;
     }
 
     /**
-     * 拼接http请求,进行get请求
+     * 发送请求
      * 列入:http://127.0.0.1:8080/service/类名/方法名?args={key1:value1,key2:value2}
-     *
-     * @param proxy
-     * @param method
-     * @param args
-     * @return
-     * @throws Throwable
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         try {
             Class returnType = method.getReturnType();
-            String url = "http://" + ip + ":" + port + "/service/" + clazz.getName() + "/" + method.getName();
+
+
+            String url = host + "/service/" + serviceName + "/" + method.getName();
+
+            System.out.println("===========" + url);
+
             MethodCallEntity entity = new MethodCallEntity(returnType.getName(), args);
             String argsJson = MethodCallUtil.getMethodCallStr(entity);
             url += "?args=" + argsJson;
@@ -61,7 +55,7 @@ public class RpcProxy implements InvocationHandler {
                 String result = response.body().string();
                 System.out.println(result);
 
-                if("void".equals(returnType.getName()) && "void".equals(result)){
+                if ("void".equals(returnType.getName()) && "void".equals(result)) {
                     return null;
                 }
                 return JSON.parseObject(result, returnType);
@@ -74,4 +68,6 @@ public class RpcProxy implements InvocationHandler {
             throw (SysException) new SysException(SysErCode.RPC_ERROR).initCause(e);
         }
     }
+
+
 }

@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import com.alibaba.fastjson.JSON;
 import com.goribun.navie.core.constants.SysErCode;
 import com.goribun.navie.core.exception.SysException;
+import com.goribun.navie.core.protocol.Protocol;
 import com.goribun.navie.core.serial.MethodCallEntity;
 import com.goribun.navie.core.serial.MethodCallUtil;
 import okhttp3.OkHttpClient;
@@ -35,6 +36,7 @@ public class RpcProxy implements InvocationHandler {
      * 发送请求
      * 列入:http://127.0.0.1:8080/service/类名/方法名?args={key1:value1,key2:value2}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         try {
@@ -43,8 +45,6 @@ public class RpcProxy implements InvocationHandler {
 
             String url = host + "/service/" + serviceName + "/" + method.getName();
 
-            System.out.println("===========" + url);
-
             MethodCallEntity entity = new MethodCallEntity(returnType.getName(), args);
             String argsJson = MethodCallUtil.getMethodCallStr(entity);
             url += "?args=" + argsJson;
@@ -52,13 +52,15 @@ public class RpcProxy implements InvocationHandler {
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                String result = response.body().string();
-                System.out.println(result);
+                String resultString = response.body().string();
+                //接收到的协议体
+                Protocol protocol = JSON.parseObject(resultString, Protocol.class);
 
-                if ("void".equals(returnType.getName()) && "void".equals(result)) {
+                if ("void".equals(returnType.getName()) && "void".equals(resultString)) {
                     return null;
                 }
-                return JSON.parseObject(result, returnType);
+                //返回反序列化的值
+                return JSON.parseObject(JSON.toJSONString(protocol.getData()), returnType);
             } else {
                 throw new SysException(SysErCode.OK_HTTP_ERROR);
             }
@@ -68,6 +70,5 @@ public class RpcProxy implements InvocationHandler {
             throw (SysException) new SysException(SysErCode.RPC_ERROR).initCause(e);
         }
     }
-
 
 }

@@ -15,6 +15,11 @@ public class MethodCallEntity {
     private String returnType;
     private LinkedList<Map<String, Object>> argList = Lists.newLinkedList();
 
+    //无参构造
+    public MethodCallEntity() {
+
+    }
+
     public MethodCallEntity(String returnType, Object[] args) {
         this.returnType = returnType;
         if (args != null && args.length != 0) {

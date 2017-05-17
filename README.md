@@ -16,10 +16,16 @@ A simple RPC exercise program.
 配置文件：naive-rpc.properties
 
 可配置RPC接口扫描路径
-scanPackage=cn.wangxs.crm.*.service.*
+
+```
+    scanPackage=cn.wangxs.crm.*.service.*
+```
 
 可配置项目名
-appName=crm
+
+```
+    appName=crm
+```
 
 ### 服务调用端
 
@@ -36,7 +42,9 @@ appName=crm
 
 可配置服务host（约定为appName=http://xxx.com）
 
-crm=http://api.crm.wangxs.cn
+```
+    crm=http://api.crm.wangxs.cn
+```
 
 ## Demo
 

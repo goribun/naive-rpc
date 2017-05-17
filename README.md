@@ -48,6 +48,18 @@ A simple RPC exercise program.
 
 ## Demo
 
+- 提供方
+
+```java
+    @RpcService
+    public interface IDemoService {
+
+        String sayHello(User user, Activity activity);
+    }
+```
+
+- 调用方方
+
  ```java
      IDemoService demoService = RpcClient.refer(IDemoService.class);
      

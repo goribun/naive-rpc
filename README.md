@@ -35,6 +35,7 @@ appName=crm
 配置文件：naive-rpc.properties
 
 可配置服务host（约定为appName=http://xxx.com）
+
 crm=http://api.crm.wangxs.cn
 
 ## Demo

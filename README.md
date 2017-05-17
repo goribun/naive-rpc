@@ -53,7 +53,6 @@ A simple RPC exercise program.
 ```java
     @RpcService
     public interface IDemoService {
-
         String sayHello(User user, Activity activity);
     }
 ```
@@ -62,7 +61,6 @@ A simple RPC exercise program.
 
  ```java
      IDemoService demoService = RpcClient.refer(IDemoService.class);
-     
      demoService.sayHello(user, activity);
  ```
  

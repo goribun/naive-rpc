@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.goribun.navie.facade.dto.UserDTO;
 import com.goribun.navie.facade.intefaces.IUserService;
-import com.goribun.navie.server.annotations.RpcServer;
+import com.goribun.naive.server.annotations.RpcServer;
 import org.springframework.stereotype.Service;
 
 /**

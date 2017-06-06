@@ -2,8 +2,8 @@ package com.goribun.navie.manage.regist;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.goribun.navie.core.constants.SysErCode;
-import com.goribun.navie.core.exception.SysException;
+import com.goribun.naive.core.constants.SysErCode;
+import com.goribun.naive.core.exception.SysException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;

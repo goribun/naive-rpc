@@ -1,17 +1,5 @@
 package com.goribun.navie;
 
-import java.util.List;
-
-import com.alibaba.fastjson.JSONObject;
-import com.goribum.naive.Application;
-import com.goribun.navie.client.poxy.RpcProxy;
-import com.goribun.navie.facade.dto.UserDTO;
-import com.goribun.navie.facade.intefaces.IUserService;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.boot.SpringApplication;
-
 /**
  * @author chenchuan@autohome.com.cn
  * @create 2017-04-11-下午11:34

@@ -39,6 +39,15 @@ public class RpcProxy implements InvocationHandler {
     @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
+
+        String methodName = method.getName();
+        if ("toString".equals(methodName)) {
+            return String.format("host:%s->service:%s", host, serviceName);
+        }
+        if ("hashCode".equals(methodName)) {
+            return null;
+        }
+
         try {
             Class returnType = method.getReturnType();
 

@@ -44,7 +44,7 @@ public class RpcProxy implements InvocationHandler {
 
             String url = host + "/service/" + serviceName + "/" + method.getName();
 
-            MethodCallEntity entity = new MethodCallEntity(returnType.getName(), args);
+            MethodCallEntity entity = new MethodCallEntity(method, args);
             String argsJson = MethodCallUtil.getMethodCallStr(entity);
             url += "?args=" + argsJson;
             Request request = new Request.Builder().url(url).build();

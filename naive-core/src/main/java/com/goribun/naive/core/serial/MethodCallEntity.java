@@ -1,10 +1,9 @@
 package com.goribun.naive.core.serial;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * 调用方法bean
@@ -13,20 +12,22 @@ import com.google.common.collect.Maps;
  */
 public class MethodCallEntity {
     private String returnType;
-    private LinkedList<Map<String, Object>> argList = Lists.newLinkedList();
+    private LinkedList<ParameterEntity> argList = Lists.newLinkedList();
 
     //无参构造
     public MethodCallEntity() {
 
     }
 
-    public MethodCallEntity(String returnType, Object[] args) {
-        this.returnType = returnType;
+    public MethodCallEntity(Method method, Object[] args) {
+
+        this.returnType = method.getReturnType().getName();
+
+        Class[] classes = method.getParameterTypes();
         if (args != null && args.length != 0) {
-            for (Object object : args) {
-                Map<String, Object> map = Maps.newHashMap();
-                map.put(object.getClass().getName(), object);
-                argList.add(map);
+            for (int i=0;i<args.length;i++) {
+                ParameterEntity parameterEntity =new ParameterEntity(classes[i].getName(),args[i]);
+                argList.add(parameterEntity);
             }
         }
     }
@@ -35,7 +36,7 @@ public class MethodCallEntity {
         return returnType;
     }
 
-    public LinkedList<Map<String, Object>> getArgList() {
+    public LinkedList<ParameterEntity> getArgList() {
         return argList;
     }
 
@@ -43,7 +44,7 @@ public class MethodCallEntity {
         this.returnType = returnType;
     }
 
-    public void setArgList(LinkedList<Map<String, Object>> argList) {
+    public void setArgList(LinkedList<ParameterEntity> argList) {
         this.argList = argList;
     }
 }

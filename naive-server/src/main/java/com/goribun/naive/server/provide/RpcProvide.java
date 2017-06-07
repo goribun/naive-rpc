@@ -3,13 +3,13 @@ package com.goribun.naive.server.provide;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.goribun.naive.core.constants.SysErCode;
 import com.goribun.naive.core.exception.SysException;
 import com.goribun.naive.core.serial.MethodCallEntity;
 import com.goribun.naive.core.serial.MethodCallUtil;
+import com.goribun.naive.core.serial.ParameterEntity;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -23,7 +23,7 @@ public class RpcProvide {
 
             MethodCallEntity methodCall = MethodCallUtil.getMethodCallEntity(args);
 
-            LinkedList<Map<String, Object>> argList = methodCall.getArgList();
+            LinkedList<ParameterEntity> argList = methodCall.getArgList();
             if (CollectionUtils.isEmpty(argList)) {
                 Method method = obj.getClass().getDeclaredMethod(methodName);
                 if ("void".equals(methodCall.getReturnType())) {
@@ -36,11 +36,11 @@ public class RpcProvide {
                 Class[] parameterTypes = new Class[argList.size()];
                 Object[] refArgs = new Object[argList.size()];
                 for (int i = 0; i < argList.size(); i++) {
-                    Map<String, Object> map = argList.get(i);
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        Class parameterClass = Class.forName(entry.getKey());
-                        parameterTypes[i] = parameterClass;
-                    }
+                    ParameterEntity parameterEntity = argList.get(i);
+
+                    Class parameterClass = Class.forName(parameterEntity.getClazz());
+                    parameterTypes[i] = parameterClass;
+
                 }
 
                 //反射得到方法，此处修改为通过原始class获取，是因为spring代理对象反射获取会丢掉参数泛型
@@ -49,10 +49,8 @@ public class RpcProvide {
                 Type[] types = refMethod.getGenericParameterTypes();
 
                 for (int i = 0; i < argList.size(); i++) {
-                    Map<String, Object> map = argList.get(i);
-                    for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        refArgs[i] = JSON.parseObject(entry.getValue().toString(), types[i]);
-                    }
+                    ParameterEntity parameterEntity = argList.get(i);
+                    refArgs[i] = JSON.parseObject(parameterEntity.getValue().toString(), types[i]);
                 }
 
                 if ("void".equals(methodCall.getReturnType())) {

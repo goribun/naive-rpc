@@ -42,7 +42,7 @@ public class NaiveAcceptor {
 
         Object result = null;
         try {
-            result = RpcProvide.rpcProvide(implObj, methodName, args);
+            result = RpcProvide.rpcProvide(implObj, methodName, args, clazz);
         } catch (BizException e) {
             //业务异常
             LOGGER.error(e.getMessage(), e);

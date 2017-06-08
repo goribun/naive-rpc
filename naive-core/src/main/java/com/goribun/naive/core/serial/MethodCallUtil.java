@@ -15,4 +15,11 @@ public class MethodCallUtil {
     public static String getMethodCallStr(MethodCallEntity entity) {
         return JSONObject.toJSONString(entity);
     }
+
+    /**
+     * 判断是否是JSONObject
+     */
+    public static boolean isJSONObject(Object obj) {
+        return obj != null && obj instanceof JSONObject;
+    }
 }

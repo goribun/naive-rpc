@@ -50,7 +50,14 @@ public class RpcProvide {
 
                 for (int i = 0; i < argList.size(); i++) {
                     ParameterEntity parameterEntity = argList.get(i);
-                    refArgs[i] = JSON.parseObject(parameterEntity.getValue().toString(), types[i]);
+
+                    //JSONObject类型的解析为实际参数
+                    if (MethodCallUtil.isJSONObject(parameterEntity.getValue())) {
+                        refArgs[i] = JSON.parseObject(parameterEntity.getValue().toString(), types[i]);
+                    } else {
+                        //直接设置为参数
+                        refArgs[i] = parameterEntity.getValue();
+                    }
                 }
 
                 if ("void".equals(methodCall.getReturnType())) {

@@ -4,6 +4,8 @@ import javax.annotation.Resource;
 
 import com.goribun.naive.core.exception.BizException;
 import com.goribun.naive.core.protocol.Protocol;
+import com.goribun.naive.core.protocol.ProtocolStatus;
+import com.goribun.naive.core.utils.ExceptionUtil;
 import com.goribun.naive.server.context.ServiceContext;
 import com.goribun.naive.server.provide.RpcProvide;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ public class NaiveAcceptor {
         Object implObj = applicationContext.getBean(clazz);
 
         Protocol protocol = new Protocol();
+        protocol.setCode(ProtocolStatus.SUCCESS);
         HttpStatus httpStatus = HttpStatus.OK;
 
         Object result = null;
@@ -46,17 +49,18 @@ public class NaiveAcceptor {
         } catch (BizException e) {
             //业务异常
             LOGGER.error(e.getMessage(), e);
+            protocol.setExceptionDetail(ExceptionUtil.formatException(e));
+            protocol.setMessage(e.getMessage());
+            protocol.setCode(ProtocolStatus.FAILURE);
         } catch (Exception e) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             LOGGER.error(e.getMessage(), e);
+            protocol.setExceptionDetail(ExceptionUtil.formatException(e));
+            protocol.setMessage(e.getMessage());
+            protocol.setCode(ProtocolStatus.FAILURE);
         }
-
         protocol.setData(result);
-
-        ResponseEntity<Protocol> responseEntity = new ResponseEntity<>(protocol, httpStatus);
-
-        return responseEntity;
-
+        return new ResponseEntity<>(protocol, httpStatus);
     }
 
 }

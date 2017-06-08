@@ -58,4 +58,16 @@ public class PropertyUtil {
         }
         return props.getProperty(key, defaultValue);
     }
+
+    public static boolean getBooleanProperty(String key, boolean defaultValue) {
+        if (null == props) {
+            loadProps();
+        }
+
+        try {
+            return Boolean.valueOf(props.getProperty(key));
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
 }

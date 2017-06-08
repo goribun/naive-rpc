@@ -1,16 +1,16 @@
 package com.goribun.naive.server.provide;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 import com.alibaba.fastjson.JSON;
-import com.goribun.naive.core.constants.SysErCode;
-import com.goribun.naive.core.exception.SysException;
 import com.goribun.naive.core.serial.MethodCallEntity;
 import com.goribun.naive.core.serial.MethodCallUtil;
 import com.goribun.naive.core.serial.ParameterEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * @author chenchuan
@@ -18,40 +18,36 @@ import org.springframework.util.CollectionUtils;
 public class RpcProvide {
 
     @SuppressWarnings("unchecked")
-    public static Object rpcProvide(Object obj, String methodName, String args, Class clazz) {
-        try {
-            MethodCallEntity methodCall = MethodCallUtil.getMethodCallEntity(args);
-            LinkedList<ParameterEntity> argList = methodCall.getArgList();
+    public static Object rpcProvide(Object obj, String methodName, String args, Class clazz) throws
+            ClassNotFoundException, NoSuchMethodException {
+        MethodCallEntity methodCall = MethodCallUtil.getMethodCallEntity(args);
+        LinkedList<ParameterEntity> argList = methodCall.getArgList();
 
-            Class[] parameterTypes;
-            Method refMethod;
+        Class[] parameterTypes;
+        Method refMethod;
 
-            //无参
-            if (CollectionUtils.isEmpty(argList)) {
-                parameterTypes = new Class[0];
-            } else {
-                parameterTypes = new Class[argList.size()];
-                for (int i = 0; i < argList.size(); i++) {
-                    ParameterEntity parameterEntity = argList.get(i);
-                    Class parameterClass = Class.forName(parameterEntity.getClazz());
-                    parameterTypes[i] = parameterClass;
-                }
+        //无参
+        if (CollectionUtils.isEmpty(argList)) {
+            parameterTypes = new Class[0];
+        } else {
+            parameterTypes = new Class[argList.size()];
+            for (int i = 0; i < argList.size(); i++) {
+                ParameterEntity parameterEntity = argList.get(i);
+                Class parameterClass = Class.forName(parameterEntity.getClazz());
+                parameterTypes[i] = parameterClass;
             }
+        }
 
-            //反射得到方法，此处修改为通过原始class获取，是因为spring代理对象反射获取会丢掉参数泛型
-            refMethod = clazz.getDeclaredMethod(methodName, parameterTypes);
-            //参数数组
-            Object[] refArgs = getParamArray(refMethod, argList);
+        //反射得到方法，此处修改为通过原始class获取，是因为spring代理对象反射获取会丢掉参数泛型
+        refMethod = clazz.getDeclaredMethod(methodName, parameterTypes);
+        //参数数组
+        Object[] refArgs = getParamArray(refMethod, argList);
 
-            if ("void".equals(methodCall.getReturnType())) {
-                refMethod.invoke(obj.getClass().newInstance(), refArgs);
-                return "void";
-            } else {
-                return refMethod.invoke(obj, refArgs);
-            }
-
-        } catch (Exception e) {
-            throw (SysException) new SysException(SysErCode.PROVIDE_ERR0R).initCause(e);
+        if ("void".equals(methodCall.getReturnType())) {
+            ReflectionUtils.invokeMethod(refMethod, obj, refArgs);
+            return "void";
+        } else {
+            return ReflectionUtils.invokeMethod(refMethod, obj, refArgs);
         }
     }
 

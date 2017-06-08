@@ -38,7 +38,7 @@ public class RpcProxy implements InvocationHandler {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) {
+    public Object invoke(Object proxy, Method method, Object[] args) throws IOException {
 
         String methodName = method.getName();
         if ("toString".equals(methodName)) {
@@ -48,33 +48,28 @@ public class RpcProxy implements InvocationHandler {
             return null;
         }
 
-        try {
-            Class returnType = method.getReturnType();
+        String url = host + "/service/" + serviceName + "/" + method.getName();
+        MethodCallEntity entity = new MethodCallEntity(method, args);
+        String argsJson = MethodCallUtil.getMethodCallStr(entity);
+        url += "?args=" + argsJson;
 
-            String url = host + "/service/" + serviceName + "/" + method.getName();
+        Class returnType = method.getReturnType();
 
-            MethodCallEntity entity = new MethodCallEntity(method, args);
-            String argsJson = MethodCallUtil.getMethodCallStr(entity);
-            url += "?args=" + argsJson;
-            Request request = new Request.Builder().url(url).build();
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String resultString = response.body().string();
-                //接收到的协议体
-                Protocol protocol = JSON.parseObject(resultString, Protocol.class);
+        Request request = new Request.Builder().url(url).build();
+        Response response = client.newCall(request).execute();
 
-                if ("void".equals(returnType.getName()) && "void".equals(resultString)) {
-                    return null;
-                }
-                //返回反序列化的值
-                return JSON.parseObject(JSON.toJSONString(protocol.getData()), returnType);
-            } else {
-                throw new SysException(SysErCode.OK_HTTP_ERROR);
+        if (response.isSuccessful()) {
+            String resultString = response.body().string();
+            //接收到的协议体
+            Protocol protocol = JSON.parseObject(resultString, Protocol.class);
+
+            if ("void".equals(returnType.getName()) && "void".equals(resultString)) {
+                return null;
             }
-        } catch (IOException e) {
-            throw (SysException) new SysException(SysErCode.IO_ERROR).initCause(e);
-        } catch (Throwable e) {
-            throw (SysException) new SysException(SysErCode.RPC_ERROR).initCause(e);
+            //返回反序列化的值
+            return JSON.parseObject(JSON.toJSONString(protocol.getData()), returnType);
+        } else {
+            throw new SysException(SysErCode.OK_HTTP_ERROR);
         }
     }
 

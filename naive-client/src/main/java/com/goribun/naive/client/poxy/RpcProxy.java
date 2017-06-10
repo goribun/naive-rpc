@@ -1,6 +1,5 @@
 package com.goribun.naive.client.poxy;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -8,8 +7,10 @@ import com.alibaba.fastjson.JSON;
 import com.goribun.naive.core.constants.SysErCode;
 import com.goribun.naive.core.exception.SysException;
 import com.goribun.naive.core.protocol.Protocol;
+import com.goribun.naive.core.protocol.ProtocolStatus;
 import com.goribun.naive.core.serial.MethodCallEntity;
 import com.goribun.naive.core.serial.MethodCallUtil;
+import com.goribun.naive.core.utils.ExceptionUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,7 +39,7 @@ public class RpcProxy implements InvocationHandler {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws IOException {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         String methodName = method.getName();
         if ("toString".equals(methodName)) {
@@ -62,6 +63,10 @@ public class RpcProxy implements InvocationHandler {
             String resultString = response.body().string();
             //接收到的协议体
             Protocol protocol = JSON.parseObject(resultString, Protocol.class);
+
+            if (protocol.getCode() == ProtocolStatus.FAILURE) {
+                 throw ExceptionUtil.instanceThrowable(protocol.getExceptionDetail());
+            }
 
             if ("void".equals(returnType.getName()) && "void".equals(resultString)) {
                 return null;

@@ -1,6 +1,7 @@
 package com.goribun.naive.core.serial;
 
 import com.alibaba.fastjson.JSONObject;
+import com.goribun.naive.core.constants.Const;
 
 /**
  * 调用方法序列化与反序列化工具
@@ -13,7 +14,7 @@ public class MethodCallUtil {
     }
 
     public static String getMethodCallStr(MethodCallEntity entity) {
-        return JSONObject.toJSONString(entity);
+        return JSONObject.toJSONStringWithDateFormat(entity, Const.DEFAULT_DATE_FORMAT);
     }
 
     /**

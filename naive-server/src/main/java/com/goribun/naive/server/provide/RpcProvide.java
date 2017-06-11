@@ -1,6 +1,5 @@
 package com.goribun.naive.server.provide;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
@@ -9,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.goribun.naive.core.serial.MethodCallEntity;
 import com.goribun.naive.core.serial.MethodCallUtil;
 import com.goribun.naive.core.serial.ParameterEntity;
+import com.goribun.naive.core.utils.ClassUtil;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -33,7 +33,7 @@ public class RpcProvide {
             parameterTypes = new Class[argList.size()];
             for (int i = 0; i < argList.size(); i++) {
                 ParameterEntity parameterEntity = argList.get(i);
-                Class parameterClass = Class.forName(parameterEntity.getClazz());
+                Class parameterClass = ClassUtil.forNameWithPrimitive(parameterEntity.getClassName());
                 parameterTypes[i] = parameterClass;
             }
         }
@@ -69,7 +69,7 @@ public class RpcProvide {
                 refArgs[i] = JSON.parseObject(parameterEntity.getValue().toString(), types[i]);
             } else {
                 //直接设置为参数
-                refArgs[i] = parameterEntity.getValue();
+                refArgs[i] = ClassUtil.parseObject((Class) types[i], parameterEntity.getValue());
             }
         }
         return refArgs;

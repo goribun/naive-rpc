@@ -8,7 +8,7 @@ package com.goribun.naive.core.serial;
 public class ParameterEntity {
 
     //参数类型
-    private String clazz;
+    private String className;
 
     //参数值
     private Object value;
@@ -16,17 +16,17 @@ public class ParameterEntity {
     public ParameterEntity() {
     }
 
-    public ParameterEntity(String clazz, Object value) {
-        this.clazz = clazz;
+    public ParameterEntity(String className, Object value) {
+        this.className = className;
         this.value = value;
     }
 
-    public String getClazz() {
-        return clazz;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public Object getValue() {

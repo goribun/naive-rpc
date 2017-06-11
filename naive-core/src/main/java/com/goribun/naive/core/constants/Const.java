@@ -13,4 +13,8 @@ public class Const {
 
     public static final String IS_TRACE_STACK = "isTraceStack";
 
+    //日期格式
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss SSS";
+
+
 }

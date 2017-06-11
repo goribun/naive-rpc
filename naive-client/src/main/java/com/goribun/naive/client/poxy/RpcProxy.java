@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import com.alibaba.fastjson.JSON;
+import com.goribun.naive.client.http.OkHttpUtil;
 import com.goribun.naive.core.constants.SysErCode;
 import com.goribun.naive.core.exception.SysException;
 import com.goribun.naive.core.protocol.Protocol;
@@ -11,7 +12,6 @@ import com.goribun.naive.core.protocol.ProtocolStatus;
 import com.goribun.naive.core.serial.MethodCallEntity;
 import com.goribun.naive.core.serial.MethodCallUtil;
 import com.goribun.naive.core.utils.ExceptionUtil;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -22,9 +22,6 @@ import okhttp3.Response;
  */
 public class RpcProxy implements InvocationHandler {
 
-    private OkHttpClient client = new OkHttpClient();
-
-    //private Class<?> clazz;
     private String serviceName;
     private String host;
 
@@ -57,7 +54,7 @@ public class RpcProxy implements InvocationHandler {
         Class returnType = method.getReturnType();
 
         Request request = new Request.Builder().url(url).build();
-        Response response = client.newCall(request).execute();
+        Response response = OkHttpUtil.getOkHttpClient().newCall(request).execute();
 
         if (response.isSuccessful()) {
             String resultString = response.body().string();
@@ -65,7 +62,7 @@ public class RpcProxy implements InvocationHandler {
             Protocol protocol = JSON.parseObject(resultString, Protocol.class);
 
             if (protocol.getCode() == ProtocolStatus.FAILURE) {
-                 throw ExceptionUtil.instanceThrowable(protocol.getExceptionDetail());
+                throw ExceptionUtil.instanceThrowable(protocol.getExceptionDetail());
             }
 
             if ("void".equals(returnType.getName()) && "void".equals(resultString)) {

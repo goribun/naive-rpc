@@ -68,6 +68,6 @@ A simple RPC exercise program.
 
 - client打包
 
-- 支持泛型参数
+- ~~支持泛型参数~~
 
-- 异常处理及传递
+- ~~异常处理及传递~~
